@@ -337,7 +337,12 @@ fn the_owner_marked_extended_prefix_reads_modeled_from_the_tail() {
         decode_owner_marked(&owner_marked_extended(0, 1, 0, false)).expect("cosmetic thread");
     assert!(!extended(&cosmetic).modeled);
     assert!(decode_owner_marked(&owner_marked_extended(1, 1, 1, false)).is_none());
-    assert!(decode_owner_marked(&owner_marked_extended(1, 2, 0, false)).is_none());
+    let marker_two =
+        decode_owner_marked(&owner_marked_extended(1, 2, 0, false)).expect("marker two");
+    assert_eq!(marker_two.form, DesignThreadForm::StandardExtended);
+    assert!(extended(&marker_two).modeled);
+    assert_eq!(marker_two.face_group_record_indices, [101]);
+    assert!(decode_owner_marked(&owner_marked_extended(1, 3, 0, false)).is_none());
     assert!(decode_owner_marked(&owner_marked_extended(2, 1, 0, false)).is_none());
     assert!(decode_owner_marked(&owner_marked_extended(1, 1, 0, true)).is_none());
 }
