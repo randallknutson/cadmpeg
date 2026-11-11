@@ -276,7 +276,9 @@ pub(super) fn parse_thread_payload(
         }
         let (pitch_marker, trailer_kind, full_length) =
             match (expected_form, bytes.get(after_profile..after_profile + 5)?) {
-                (ThreadPrefix::Extended(prefix), [flag @ (0 | 1), 1, 0, 0, 0]) => {
+                (ThreadPrefix::Extended(prefix), [flag @ (0 | 1), second @ (1 | 2), 0, 0, 0])
+                    if *second == 1 || prefix.modeled_from_tail =>
+                {
                     let pitch_marker = if prefix.modeled_from_tail {
                         match bytes.get(after_profile + thread_tail::PITCH_MARKER) {
                             Some(&marker @ (0 | 1)) => marker,
